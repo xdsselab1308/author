@@ -39,11 +39,11 @@ public class AuthorController {
     
     @RequestMapping("/getAuthorBookInfo")
     @ResponseBody
-    public AuthorBookVM getAuthorBookInfo(@RequestParam String bookname) {
+    public AuthorBookVM getAuthorBookInfo(@RequestParam String bookname, @RequestParam String ip) {
     	
     	AuthorModel author = authorService.getAuthorInfo(bookname);    	
     	RestTemplate restTemplate = new RestTemplate();
-    	List<BookVM> list = restTemplate.getForObject("http://localhost:8081/getBookInfo?authorId="+author.getAuthorId(),List.class);
+    	List<BookVM> list = restTemplate.getForObject("http://"+ip+":8081/getBookInfo?authorId="+author.getAuthorId(),List.class);
     	AuthorBookVM authorbook = new AuthorBookVM();
     	authorbook.setAuthorId(author.getAuthorId());
     	authorbook.setAuthorname(author.getAuthorname());
