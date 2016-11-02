@@ -1,6 +1,7 @@
 package com.sselab.springboot.author.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import com.sselab.springboot.author.service.AuthorService;
 import com.sselab.springboot.author.vm.AuthorBookVM;
 import com.sselab.springboot.author.vm.BookVM;
 import com.sselab.springboot.form.AuthorForm;
+import com.sselab.springboot.form.AuthorUpdateForm;
 
 @RestController
 public class AuthorController {
@@ -29,13 +31,14 @@ public class AuthorController {
 
     @Autowired
     private AuthorService authorService;
+    
 
-    @RequestMapping("/getAuthorInfo")
-    @ResponseBody
-    public AuthorModel getAuthorInfo(@RequestParam String bookname) {
-    	AuthorModel author = authorService.getAuthorInfo(bookname);
-        return author;
-    }
+//    @RequestMapping("/getAuthorInfo")
+//    @ResponseBody
+//    public AuthorModel getAuthorInfo(@RequestParam String bookname) {
+//    	AuthorModel author = authorService.getAuthorInfo(bookname);
+//        return author;
+//    }
     
     @RequestMapping("/getAuthorBookInfo")
     @ResponseBody
@@ -53,10 +56,60 @@ public class AuthorController {
         return authorbook;
     }
     
+    @RequestMapping("/deleteAuthorBookInfo")
+    @ResponseBody
+    public long deleteAuthorBookInfo(@RequestParam Long authorId, @RequestParam String ip) {
+    	
+    	AuthorModel model = authorService.getById(authorId);
+    	RestTemplate restTemplate = new RestTemplate();
+    	List<LinkedHashMap<String, Object>> usersMap = restTemplate.getForObject("http://"+ip+":8081/getBookInfo?authorId="+model.getAuthorId(),List.class);
+
+
+    	if(usersMap!=null){
+			for(LinkedHashMap<String, Object> map : usersMap){
+	            System.out.println("Book : id="+map.get("bookId"));
+	            new RestTemplate().getForObject("http://"+ip+":8081/deleteBook?bookId="+map.get("bookId"),Integer.class);
+	        }
+    	}
+    	int flag = authorService.deleteById(authorId);
+        return flag;
+    }
+    
     @RequestMapping("/insertAuthor")
     @ResponseBody
     public long add(@Valid @RequestBody AuthorForm form) {
         long authorId = authorService.add(form);
         return authorId;
     }
+    
+    @RequestMapping("/editAuthor")
+    @ResponseBody
+    public long edit(@Valid @RequestBody AuthorUpdateForm form) {
+        long authorId = authorService.update(form);
+        return authorId;
+    }
+    
+//    @RequestMapping("/deleteAuthor")
+//    @ResponseBody
+//    public long delete(@RequestParam Long authorId) {
+//        int flag = authorService.deleteById(authorId);
+//        return flag;
+//    }
+    
+    @RequestMapping("/getAllAuthor")
+    @ResponseBody
+    public List<AuthorModel> list(@RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int limits) {
+    	List<AuthorModel> list = authorService.selectPaged(page, limits);
+    	return list;
+    }
+    
+    
+    @RequestMapping("/getAuthorById")
+    @ResponseBody
+    public AuthorModel get(@RequestParam long authorId) {
+    	AuthorModel model = authorService.getById(authorId);
+    	return model;
+    }
+    
 }
