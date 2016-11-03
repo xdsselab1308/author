@@ -1,20 +1,16 @@
-package com.sselab.springboot.form;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+package com.sselab.springboot.author.form;
 
 import com.sselab.springboot.author.model.AuthorModel;
 
-public class AuthorForm {
+public class AuthorUpdateForm {
 
+	private Long authorId;
     private String authorname;
     private String email;
     private String address;
     
     public AuthorModel toModel() {
-    	AuthorModel model = new AuthorModel(null, authorname, email, address);
+    	AuthorModel model = new AuthorModel(authorId, authorname, email, address);
 	    return model;
     }
 	public String getAuthorname() {
@@ -35,8 +31,17 @@ public class AuthorForm {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	public Long getAuthorId() {
+		return authorId;
+	}
+	public void setAuthorId(Long authorId) {
+		this.authorId = authorId;
+	}
+	
+	
 
 }
+
 
 
 

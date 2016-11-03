@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sselab.springboot.author.dao.AuthorDao;
+import com.sselab.springboot.author.form.AuthorForm;
+import com.sselab.springboot.author.form.AuthorUpdateForm;
 import com.sselab.springboot.author.model.AuthorModel;
 import com.sselab.springboot.author.service.AuthorService;
-import com.sselab.springboot.form.AuthorForm;
-import com.sselab.springboot.form.AuthorUpdateForm;
 
 
 

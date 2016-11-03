@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.sselab.springboot.author.form.AuthorForm;
+import com.sselab.springboot.author.form.AuthorUpdateForm;
 import com.sselab.springboot.author.model.AuthorModel;
 import com.sselab.springboot.author.service.AuthorService;
 import com.sselab.springboot.author.vm.AuthorBookVM;
 import com.sselab.springboot.author.vm.BookVM;
-import com.sselab.springboot.form.AuthorForm;
-import com.sselab.springboot.form.AuthorUpdateForm;
 
 @RestController
 public class AuthorController {

@@ -1,16 +1,15 @@
-package com.sselab.springboot.form;
+package com.sselab.springboot.author.form;
 
 import com.sselab.springboot.author.model.AuthorModel;
 
-public class AuthorUpdateForm {
+public class AuthorForm {
 
-	private Long authorId;
     private String authorname;
     private String email;
     private String address;
     
     public AuthorModel toModel() {
-    	AuthorModel model = new AuthorModel(authorId, authorname, email, address);
+    	AuthorModel model = new AuthorModel(null, authorname, email, address);
 	    return model;
     }
 	public String getAuthorname() {
@@ -31,17 +30,8 @@ public class AuthorUpdateForm {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public Long getAuthorId() {
-		return authorId;
-	}
-	public void setAuthorId(Long authorId) {
-		this.authorId = authorId;
-	}
-	
-	
 
 }
-
 
 
 
