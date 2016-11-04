@@ -57,14 +57,7 @@ public class AuthorServiceImpl implements AuthorService {
 		// TODO Auto-generated method stub
 		List<AuthorModel> list = authorDao.selectPaged(page, limits);
 		return list;
-	}
-	
-	
-
-
-
-    
-    
+	}    
 }
 
 
