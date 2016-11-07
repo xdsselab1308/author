@@ -40,6 +40,7 @@ public class AuthorController {
 //        return author;
 //    }
     
+    
     @RequestMapping("/getAuthorBookInfo")
     @ResponseBody
     public AuthorBookVM getAuthorBookInfo(@RequestParam String bookname, @RequestParam String ip) {
@@ -58,17 +59,17 @@ public class AuthorController {
     
     @RequestMapping("/deleteAuthorBookInfo")
     @ResponseBody
-    public long deleteAuthorBookInfo(@RequestParam Long authorId, @RequestParam String ip) {
+    public long deleteAuthorBookInfo(@RequestParam Long authorId) {
     	
     	AuthorModel model = authorService.getById(authorId);
     	RestTemplate restTemplate = new RestTemplate();
-    	List<LinkedHashMap<String, Object>> usersMap = restTemplate.getForObject("http://"+ip+":8081/getBookInfo?authorId="+model.getAuthorId(),List.class);
+    	List<LinkedHashMap<String, Object>> usersMap = restTemplate.getForObject("http://114.215.202.202:8081/getBookInfo?authorId="+model.getAuthorId(),List.class);
 
 
     	if(usersMap!=null){
 			for(LinkedHashMap<String, Object> map : usersMap){
 	            System.out.println("Book : id="+map.get("bookId"));
-	            new RestTemplate().getForObject("http://"+ip+":8081/deleteBook?bookId="+map.get("bookId"),Integer.class);
+	            new RestTemplate().getForObject("http://114.215.202.202:8081/deleteBook?bookId="+map.get("bookId"),Integer.class);
 	        }
     	}
     	int flag = authorService.deleteById(authorId);
