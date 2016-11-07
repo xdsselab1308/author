@@ -1,8 +1,11 @@
 package com.sselab.springboot.author.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Properties;
 
 import javax.validation.Valid;
 
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
 import com.sselab.springboot.author.form.AuthorForm;
 import com.sselab.springboot.author.form.AuthorUpdateForm;
 import com.sselab.springboot.author.model.AuthorModel;
@@ -43,11 +45,19 @@ public class AuthorController {
     
     @RequestMapping("/getAuthorBookInfo")
     @ResponseBody
-    public AuthorBookVM getAuthorBookInfo(@RequestParam String bookname, @RequestParam String ip) {
-    	
+    public AuthorBookVM getAuthorBookInfo(@RequestParam String bookname) {
+
+ 	   InputStream in = this.getClass().getResourceAsStream("/author.properties"); 
+  	   Properties prop = new Properties(); 
+  	   try {
+  	    prop.load(in); 
+  	   } catch (IOException e) { 
+  	    e.printStackTrace(); 
+  	   } 
+  	   System.out.println(prop.getProperty("ip")); 
     	AuthorModel author = authorService.getAuthorInfo(bookname);    	
     	RestTemplate restTemplate = new RestTemplate();
-    	List<BookVM> list = restTemplate.getForObject("http://"+ip+":8081/getBookInfo?authorId="+author.getAuthorId(),List.class);
+    	List<BookVM> list = restTemplate.getForObject("http://"+prop.getProperty("ip")+":8081/getBookInfo?authorId="+author.getAuthorId(),List.class);
     	AuthorBookVM authorbook = new AuthorBookVM();
     	authorbook.setAuthorId(author.getAuthorId());
     	authorbook.setAuthorname(author.getAuthorname());
@@ -61,15 +71,24 @@ public class AuthorController {
     @ResponseBody
     public long deleteAuthorBookInfo(@RequestParam Long authorId) {
     	
+      InputStream in = this.getClass().getResourceAsStream("/author.properties"); 
+   	   Properties prop = new Properties(); 
+   	   try {
+   	    prop.load(in); 
+   	   } catch (IOException e) { 
+   	    e.printStackTrace(); 
+   	   } 
+   	   System.out.println(prop.getProperty("ip")); 
+    	
     	AuthorModel model = authorService.getById(authorId);
     	RestTemplate restTemplate = new RestTemplate();
-    	List<LinkedHashMap<String, Object>> usersMap = restTemplate.getForObject("http://114.215.202.202:8081/getBookInfo?authorId="+model.getAuthorId(),List.class);
+    	List<LinkedHashMap<String, Object>> usersMap = restTemplate.getForObject("http://"+prop.getProperty("ip")+":8081/getBookInfo?authorId="+model.getAuthorId(),List.class);
 
 
     	if(usersMap!=null){
 			for(LinkedHashMap<String, Object> map : usersMap){
 	            System.out.println("Book : id="+map.get("bookId"));
-	            new RestTemplate().getForObject("http://114.215.202.202:8081/deleteBook?bookId="+map.get("bookId"),Integer.class);
+	            new RestTemplate().getForObject("http://"+prop.getProperty("ip")+":8081/deleteBook?bookId="+map.get("bookId"),Integer.class);
 	        }
     	}
     	int flag = authorService.deleteById(authorId);
